@@ -1,4 +1,4 @@
-![MRC LOGO](./images/MRC Logo (1).PNG)
+![MRC LOGO](./images/MRC_Logo.PNG)
 
 # MRC microbiome analysis toolbox-A singularity container version 
 
@@ -113,14 +113,14 @@ ssh zID@katana.unsw.edu.au
 
 <img src="./images/katana_logon.png" style="zoom:90%;" />Log on from Mobaxterm (Windows Computer)
 
-<img src="./images/mobaxterm windows.png" style="zoom:90%;" />
+<img src="./images/mobaxterm_windows.png" style="zoom:90%;" />
 
 ## Working on Katana
 Always create an [interactive job](https://research.unsw.edu.au/katana-compute-jobs) to work on Katana - Do not run jobs on head node
 ```{bash,eval=F, echo=T}
 qsub -I -l nodes=1:ppn=1,mem=10gb,walltime=10:00:00
 ```
-<img src="./images/interactive session (1).png" style="zoom:90%;" />
+<img src="./images/interactive_session.png" style="zoom:90%;" />
 
 Always work in your scratch drive, this directory has a lot more space than your home
 ```{bash,eval=F, echo=T}
@@ -961,7 +961,7 @@ If you download file 'bray_curtis_emperor.qzv' locally then upload to qiime2 vie
 
 If you download file 'weighted_unifrac_emperor.qzv' locally then upload to qiime2 view, the visualization should be look like this.
 
-![emperor (3)](./images/emperor (3).png)
+![emperor (3)](./images/emperor.3.png)
 
 ## Alpha diversity rarefaction curve
 
@@ -1239,4 +1239,4 @@ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activ
 <img src="./images/image-20200914210527233.png" alt="image-20200914210527233" style="zoom:80%;" />
 
 
-
+Congratulations! 
