@@ -503,11 +503,7 @@ Table: Phred Quality table
 
 ***fastp.outreport.html*** open on local browser
 
-<<<<<<< HEAD
-<img src="./images/image-20200914123316926.png" alt="image-20200914123316926" style="zoom:90%;" />
-=======
 <img src="/images/image-20200914123316926.png" alt="image-20200914123316926" style="zoom:90%;" />
->>>>>>> e413a280a6e4384a03a62cdc8f2ce09fb4bc7025
 
 ## Import fasta sequences into demux.qza 
 
@@ -951,13 +947,7 @@ head -4 hf_diver/core-metrics-results/shannon_vector/alpha-diversity.tsv
 
 If you download file 'bray_curtis_emperor.qzv' locally then upload to qiime2 view, the visualization should be look like this. (Red is high fat diet samples and blue are healthy)
 
-<<<<<<< HEAD
-<img src="./images/emperor.png" alt="emperor" style="zoom:60%;" />
-=======
 <img src=".\images\emperor.png" alt="emperor" style="zoom:60%;" />
->>>>>>> e413a280a6e4384a03a62cdc8f2ce09fb4bc7025
-
-
 
 If you download file 'weighted_unifrac_emperor.qzv' locally then upload to qiime2 view, the visualization should be look like this.
 
