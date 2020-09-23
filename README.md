@@ -859,23 +859,23 @@ In order to generate the UniFrac distance, a phylogenetic tree should be build f
 #constructing phylogenetic tree
 singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime alignment mafft \
-	--i-sequences hf_diver/rep-seqs.qza \
-	--o-alignment hf_diver/aligned-rep-seqs.qza'
+ --i-sequences hf_diver/rep-seqs.qza \
+ --o-alignment hf_diver/aligned-rep-seqs.qza'
 		
 singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime alignment mask \
-	--i-alignment hf_diver/aligned-rep-seqs.qza \
-	--o-masked-alignment hf_diver/masked-aligned-rep-seqs.qza'
+ --i-alignment hf_diver/aligned-rep-seqs.qza \
+ --o-masked-alignment hf_diver/masked-aligned-rep-seqs.qza'
 		
 singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime phylogeny fasttree \
-	--i-alignment hf_diver/masked-aligned-rep-seqs.qza \
-	--o-tree hf_diver/unrooted-tree.qza --p-n-threads 1'
+ --i-alignment hf_diver/masked-aligned-rep-seqs.qza \
+ --o-tree hf_diver/unrooted-tree.qza --p-n-threads 1'
 
 singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime phylogeny midpoint-root \
-	--i-tree  hf_diver/unrooted-tree.qza \
-	--o-rooted-tree hf_diver/rooted-tree.qza'
+ --i-tree  hf_diver/unrooted-tree.qza \
+ --o-rooted-tree hf_diver/rooted-tree.qza'
 ```
 
 Four files 'aligned-rep-seqs.qza', 'masked-aligned-rep-seqs.qza', 'unrooted-tree.qza' and 'rooted-tree.qza' are generated sequentially. The **rooted-tree.qza** will be used in the core diversity analysis 
@@ -899,9 +899,9 @@ Sometimes we need to filter samples by the meta data to select part of the sampl
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime feature-table filter-samples \
-	--i-table hf_diver/table.qza \
-	--m-metadata-file meta_data.txt \
-	--o-filtered-table hf_diver/core.table.qza'
+ --i-table hf_diver/table.qza \
+ --m-metadata-file meta_data.txt \
+ --o-filtered-table hf_diver/core.table.qza'
 ```
 
 **core diversity with phylogenetic information**
@@ -909,11 +909,11 @@ qiime feature-table filter-samples \
 ```bash
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity core-metrics-phylogenetic \
-	--i-phylogeny  hf_diver/rooted-tree.qza \
-	--i-table hf_diver/core.table.qza \
-	--p-sampling-depth 800 \
-	--m-metadata-file meta_data.txt \
-	--output-dir hf_diver/core-metrics-results'
+ --i-phylogeny  hf_diver/rooted-tree.qza \
+ --i-table hf_diver/core.table.qza \
+ --p-sampling-depth 800 \
+ --m-metadata-file meta_data.txt \
+ --output-dir hf_diver/core-metrics-results'
 ```
 
 One files 'core.table.qza' and one filder 'core-metrics-results', which has the core diversity analysis outputs, are generated sequentially. This step generate alpha diversity indexes such a Shannon, observed features, jaccard, evenness, and faith phylogenetic distance data and plot. The beta diversity of PcoA such as bray-curtis distance, weighted and unweighted UniFrac distance.  
@@ -927,8 +927,8 @@ One files 'core.table.qza' and one filder 'core-metrics-results', which has the 
 ```bash
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
---input-path hf_diver/core-metrics-results/shannon_vector.qza \
---output-path hf_diver/core-metrics-results/shannon_vector'
+ --input-path hf_diver/core-metrics-results/shannon_vector.qza \
+ --output-path hf_diver/core-metrics-results/shannon_vector'
 ```
 
 Look into the output file
@@ -968,11 +968,11 @@ If you download file 'weighted_unifrac_emperor.qzv' locally then upload to qiime
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-rarefaction \
-	--i-table hf_diver/table.qza \
-	--i-phylogeny hf_diver/rooted-tree.qza \
-	--p-max-depth 800 \
-	--m-metadata-file meta_data.txt \
-	--o-visualization hf_diver/alpha-rarefaction.qzv'
+ --i-table hf_diver/table.qza \
+ --i-phylogeny hf_diver/rooted-tree.qza \
+ --p-max-depth 800 \
+ --m-metadata-file meta_data.txt \
+ --o-visualization hf_diver/alpha-rarefaction.qzv'
 ```
 
 A file 'alpha-rarefaction.qzv' is created.
@@ -1002,9 +1002,9 @@ Faith_ph
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
-	--i-alpha-diversity hf_diver/core-metrics-results/faith_pd_vector.qza \
-	--m-metadata-file meta_data.txt \
-	--o-visualization hf_diver/alpha-group/faith-pd-group-significance.qzv'
+ --i-alpha-diversity hf_diver/core-metrics-results/faith_pd_vector.qza \
+ --m-metadata-file meta_data.txt \
+ --o-visualization hf_diver/alpha-group/faith-pd-group-significance.qzv'
 ```
 
 A file 'faith-pd-group-significance.qzv' is newly generated.
@@ -1020,9 +1020,9 @@ evenness
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
-	--i-alpha-diversity hf_diver/core-metrics-results/evenness_vector.qza \
-	--m-metadata-file meta_data.txt \
-	--o-visualization hf_diver/alpha-group/evenness-group-significance.qzv'
+ --i-alpha-diversity hf_diver/core-metrics-results/evenness_vector.qza \
+ --m-metadata-file meta_data.txt \
+ --o-visualization hf_diver/alpha-group/evenness-group-significance.qzv'
 ```
 
 A file 'evenness-group-significance.qzv' is newly generated.
@@ -1038,9 +1038,9 @@ observed features
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
-	--i-alpha-diversity hf_diver/core-metrics-results/observed_features_vector.qza \
-	--m-metadata-file meta_data.txt \
-	--o-visualization hf_diver/alpha-group/observed_features_vector.qzv'
+ --i-alpha-diversity hf_diver/core-metrics-results/observed_features_vector.qza \
+ --m-metadata-file meta_data.txt \
+ --o-visualization hf_diver/alpha-group/observed_features_vector.qzv'
 ```
 
 A file 'observed_features_vector.qzv' is newly generated.
@@ -1056,9 +1056,9 @@ shannon index
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
-	--i-alpha-diversity hf_diver/core-metrics-results/shannon_vector.qza \
-	--m-metadata-file meta_data.txt \
-	--o-visualization hf_diver/alpha-group/shannon_vector.qzv'
+ --i-alpha-diversity hf_diver/core-metrics-results/shannon_vector.qza \
+ --m-metadata-file meta_data.txt \
+ --o-visualization hf_diver/alpha-group/shannon_vector.qzv'
 ```
 
 A file 'shannon_vector.qzv' is newly generated.
@@ -1074,8 +1074,8 @@ Output alpha diversity values from qiime2 output
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
-	--input-path hf_diver/alpha-group/shannon_vector.qzv \
-	--output-path hf_diver/alpha-group/shannon_vector'
+ --input-path hf_diver/alpha-group/shannon_vector.qzv \
+ --output-path hf_diver/alpha-group/shannon_vector'
 ```
 
 A folder 'shannon_vector' is newly generated. You can download the whole directory to your local pc or laptap and open the file 'index.html' to visualize.
@@ -1089,10 +1089,10 @@ Bray curtis distance on diet
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
-	--i-distance-matrix hf_diver/core-metrics-results/bray_curtis_distance_matrix.qza \
-	--m-metadata-file meta_data.txt \
-	--m-metadata-column "Diet" \
-	--o-visualization hf_diver/beta-group/Diet.bray_curtis.qzv --p-pairwise'
+ --i-distance-matrix hf_diver/core-metrics-results/bray_curtis_distance_matrix.qza \
+ --m-metadata-file meta_data.txt \
+ --m-metadata-column "Diet" \
+ --o-visualization hf_diver/beta-group/Diet.bray_curtis.qzv --p-pairwise'
 ```
 
 A file 'Diet.bray_curtis.qzv' is newly generated.
@@ -1108,10 +1108,10 @@ Jaccard distance
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
-	--i-distance-matrix hf_diver/core-metrics-results/jaccard_distance_matrix.qza \
-	--m-metadata-file meta_data.txt \
-	--m-metadata-column "Diet" \
-	--o-visualization hf_diver/beta-group/Diet.jaccard.qzv --p-pairwise'
+ --i-distance-matrix hf_diver/core-metrics-results/jaccard_distance_matrix.qza \
+ --m-metadata-file meta_data.txt \
+ --m-metadata-column "Diet" \
+ --o-visualization hf_diver/beta-group/Diet.jaccard.qzv --p-pairwise'
 ```
 
 A file 'Diet.jaccard.qzv' is newly generated.
@@ -1127,10 +1127,10 @@ Unweighted UniFrac distacne
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
-	--i-distance-matrix hf_diver/core-metrics-results/unweighted_unifrac_distance_matrix.qza \
-	--m-metadata-file meta_data.txt \
-	--m-metadata-column "Diet" \
-	--o-visualization hf_diver/beta-group/Diet.unweighted_unifrac.qzv --p-pairwise'
+ --i-distance-matrix hf_diver/core-metrics-results/unweighted_unifrac_distance_matrix.qza \
+ --m-metadata-file meta_data.txt \
+ --m-metadata-column "Diet" \
+ --o-visualization hf_diver/beta-group/Diet.unweighted_unifrac.qzv --p-pairwise'
 ```
 
 A file 'Diet.unweighted_unifrac.qzv' is newly generated.
@@ -1146,10 +1146,10 @@ Weighted UniFrac distacne
 ```shell
 singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
-	--i-distance-matrix hf_diver/core-metrics-results/weighted_unifrac_distance_matrix.qza \
-	--m-metadata-file meta_data.txt \
-	--m-metadata-column "Diet" \
-	--o-visualization hf_diver/beta-group/Diet.weighted_unifrac.qzv --p-pairwise'
+ --i-distance-matrix hf_diver/core-metrics-results/weighted_unifrac_distance_matrix.qza \
+ --m-metadata-file meta_data.txt \
+ --m-metadata-column "Diet" \
+ --o-visualization hf_diver/beta-group/Diet.weighted_unifrac.qzv --p-pairwise'
 ```
 
 A file 'Diet.weighted_unifrac.qzv' is newly generated.
