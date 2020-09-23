@@ -8,7 +8,57 @@ Date: 2020-09-15
 
 Due to complex dependency and version conflicts, bioinformaticians are strugglying about installation of different tools and solving their dependence relationship and debuging while version conflicts happens. To solve this problem and establish a comprehensive, mobile and easy to use framwork for microbiome analysis to beginners, we build this MRC microbiome singularity image. This document describe the interface for different aspects of analysis using a demo example and the mrcmicrobiome.sif singularity image. 
 
-[TOC]
+<!--ts-->
+   * [MRC microbiome analysis toolbox-A singularity container version](#mrc-microbiome-analysis-toolbox-a-singularity-container-version)
+   * [16S amplicon data analysis](#16s-amplicon-data-analysis)
+      * [Prerequisites](#prerequisites)
+   * [Structure](#structure)
+   * [Schedule](#schedule)
+   * [1. Linux and HPC setup](#1-linux-and-hpc-setup)
+            * [Overview](#overview)
+      * [High Performance Cluster Basics](#high-performance-cluster-basics)
+      * [Katana | UNSW Research](#katana--unsw-research)
+      * [Log on to Katana](#log-on-to-katana)
+      * [Working on Katana](#working-on-katana)
+      * [Katana data Mover](#katana-data-mover)
+      * [Training](#training)
+      * [Basic Linux commands](#basic-linux-commands)
+      * [Text editing from the command line](#text-editing-from-the-command-line)
+   * [2. Quality control](#2-quality-control)
+      * [Understand the demo data set](#understand-the-demo-data-set)
+            * [Overview](#overview-1)
+      * [Singularity on katana](#singularity-on-katana)
+      * [Check the demo and database db directory](#check-the-demo-and-database-db-directory)
+      * [QIIME2 manifest file preparation, example below](#qiime2-manifest-file-preparation-example-below)
+      * [Prepare manifest and run dada2](#prepare-manifest-and-run-dada2)
+            * [Overview](#overview-2)
+      * [Overall assessment of quality of sequences with fastp](#overall-assessment-of-quality-of-sequences-with-fastp)
+      * [Import fasta sequences into demux.qza](#import-fasta-sequences-into-demuxqza)
+      * [Running dada2 within qiime2 to perform quality control, this takes about 1 minute](#running-dada2-within-qiime2-to-perform-quality-control-this-takes-about-1-minute)
+      * [Host contamination removal if necessary when processing mucosal samples](#host-contamination-removal-if-necessary-when-processing-mucosal-samples)
+            * [Overview](#overview-3)
+   * [3. Taxonomy annotation and diversity analysis](#3-taxonomy-annotation-and-diversity-analysis)
+            * [Overview](#overview-4)
+      * [Taxonomy assignment of feature sequences](#taxonomy-assignment-of-feature-sequences)
+            * [Overview](#overview-5)
+      * [Phylogenetic tree construction](#phylogenetic-tree-construction)
+            * [Overview](#overview-6)
+      * [Run the core diversity analysis](#run-the-core-diversity-analysis)
+            * [Overview](#overview-7)
+      * [Alpha diversity rarefaction curve](#alpha-diversity-rarefaction-curve)
+            * [Overview](#overview-8)
+      * [PERMANOVA statistical testing of alpha and beta diversity with meta data](#permanova-statistical-testing-of-alpha-and-beta-diversity-with-meta-data)
+            * [Overview](#overview-9)
+         * [PERMANOVA statistical testing of alpha diversity for groups](#permanova-statistical-testing-of-alpha-diversity-for-groups)
+         * [PERMANOVA statistical testing of beta diversity for groups](#permanova-statistical-testing-of-beta-diversity-for-groups)
+   * [4. Using LEfSe to identify differential abundant taxa](#4-using-lefse-to-identify-differential-abundant-taxa)
+            * [Overview](#overview-10)
+      * [cladoplot presenting of signatures](#cladoplot-presenting-of-signatures)
+      * [LEfSe signatures barchart](#lefse-signatures-barchart)
+
+<!-- Added by: z3524677, at: Wed Sep 23 19:33:10 AEST 2020 -->
+
+<!--te-->
 
 # 16S amplicon data analysis 
 
