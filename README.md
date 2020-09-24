@@ -194,7 +194,7 @@ Next let's upload this file to your scratch drive on Katana using **Katana data 
 
 1. Enter the following details in the top tool bar
 
-* Hostname = `ssh zID@kdm.unsw.edu.au`
+* Hostname = `ssh zID@kdm.restech.unsw.edu.au`
 * Username = zID
 * Password = zID password
 * Port = 22
