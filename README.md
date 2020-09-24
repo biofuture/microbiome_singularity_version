@@ -141,7 +141,7 @@ ssh zID@katana.restech.unsw.edu.au
 ## Working on Katana
 Always create an [interactive job](https://research.unsw.edu.au/katana-compute-jobs) to work on Katana - Do not run jobs on head node
 ```{bash,eval=F, echo=T}
-qsub -I -l nodes=1:ppn=1,mem=10gb,walltime=10:00:00
+qsub -I -q R717942 -l nodes=1:ppn=1,mem=10gb,walltime=6:00:00
 ```
 <img src="./images/interactive_session.png" style="zoom:90%;" />
 
@@ -333,7 +333,7 @@ qsub -I -l nodes=1:ppn=1,mem=10gb,walltime=10:00:00
 
 mrcmicrobiome singularity sif have conda, qiime2-2020.8 and lefse installed, all the relevant dependence are resolved. Copy the demo data set to your own work directory 
 
-Check the singularity image file /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif 
+Check the singularity image file /data/bio/workshop/mrcmicrobiome.sif 
 
 Using the following command to create the wrok directory and copy the demo data set to your directory
 
@@ -345,7 +345,7 @@ mkdir /srv/scratch/yourzID/hfdiet
 cd /srv/scratch/yourzID/hfdiet
 
 #copy the demo data set into your work directory
-cp -r /srv/scratch/mrcbio/workshop/demo  /srv/scratch/yourzID/hfdiet
+cp -r /data/bio/workshop/demo/  /srv/scratch/yourzID/hfdiet
 ```
 
 ## Check the demo and database db directory
@@ -426,10 +426,10 @@ cd demo/
 Check the database folder 
 
 ```bash
-[z3524677@katana2 workshop]$ tree /srv/scratch/mrcbio/workshop/db
+tree /data/bio/workshop/db/
 
 #output 
-/srv/scratch/mrcbio/workshop/db
+/data/bio/workshop/db
 |-- gg-v3v4-classifier.qza
 |-- gg-v4-classifier.qza
 |-- mouse.genome.bowtie2.1.bt2
@@ -472,7 +472,7 @@ sample-id,absolute-filepath,direction
 - Understand how to perform quality control with dada2
 
 ```shell
-[z3524677@katana2 demo]$ singularity exec --cleanenv /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c 'perl  /home/applications/mima/mima_prepare_manifest_and_qc.pl'
+[z3524677@katana2 demo]$ singularity exec --cleanenv /data/bio/workshop/mrcmicrobiome.sif bash -c 'perl  /home/applications/mima/mima_prepare_manifest_and_qc.pl'
 
 perl /home/applications/mima/mima_prepare_manifest_and_qc.pl <Absolute path to store fastq files> <output.manifest> <total_1.fq> <total_2.fq> <outputdir> <# of threads> <Singularity_sif>
 	<inputdir_abs_path>  The absolute directory to store the pair-end fastq files
@@ -490,7 +490,7 @@ Run the one comman pipeline to generate all the necessary scripts. This one comm
 ```bash
 #run the command to generate commands for quality control 
 #Absolute path should be used input and output directory 
-[z3524677@katana2 demo]$ singularity exec --cleanenv /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c 'perl  /home/applications/mima/mima_prepare_manifest_and_qc.pl /srv/scratch/z3527776/hfdiet/demo/rawfq/ /srv/scratch/z3527776/hfdiet/demo/hf_d.manifest all_r1.fq all_r2.fq /srv/scratch/z3527776/hfdiet/demo/hf_qc 1 /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif'
+[z3524677@katana2 demo]$ singularity exec --cleanenv /data/bio/workshop/mrcmicrobiome.sif bash -c 'perl  /home/applications/mima/mima_prepare_manifest_and_qc.pl /srv/scratch/z3527776/hfdiet/demo/rawfq/ /srv/scratch/z3527776/hfdiet/demo/hf_d.manifest all_r1.fq all_r2.fq /srv/scratch/z3527776/hfdiet/demo/hf_qc 1 /data/bio/workshop/mrcmicrobiome.sif'
 ```
 
 ```bash
@@ -512,11 +512,11 @@ export LC_ALL=en_AU.utf8
 export LANG=en_AU.utf8
 cd /srv/scratch/z3524677/hfdiet/demo/hf_qc
 
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c ' fastp -i all_r1.fq -I all_r2.fq -o /srv/scratch/z3524677/hfdiet/demo/hf_qc/ALL_R1.fq -O /srv/scratch/z3524677/hfdiet/demo/hf_qc/ALL_R2.fq -h /srv/scratch/z3524677/hfdiet/demo/hf_qc/fastp.outreport.html'
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c ' fastp -i all_r1.fq -I all_r2.fq -o /srv/scratch/z3524677/hfdiet/demo/hf_qc/ALL_R1.fq -O /srv/scratch/z3524677/hfdiet/demo/hf_qc/ALL_R2.fq -h /srv/scratch/z3524677/hfdiet/demo/hf_qc/fastp.outreport.html'
 
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path /srv/scratch/z3524677/hfdiet/demo/hf_d.manifest --output-path demux.qza --input-format PairedEndFastqManifestPhred33'
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path /srv/scratch/z3524677/hfdiet/demo/hf_d.manifest --output-path demux.qza --input-format PairedEndFastqManifestPhred33'
 
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && qiime dada2 denoise-paired  --i-demultiplexed-seqs demux.qza  --p-trunc-len-f 295 --p-trunc-len-r 220 --p-trim-left-f 17  --p-trim-left-r 21  --p-n-threads 1 --o-representative-sequences rep-seqs.qza --o-table table.qza  --o-denoising-stats stats-dada2.qza'
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && qiime dada2 denoise-paired  --i-demultiplexed-seqs demux.qza  --p-trunc-len-f 295 --p-trunc-len-r 220 --p-trim-left-f 17  --p-trim-left-r 21  --p-n-threads 1 --o-representative-sequences rep-seqs.qza --o-table table.qza  --o-denoising-stats stats-dada2.qza'
 ```
 
 Files in the folder after running the ***mima_prepare_manifest_and_qc.pl*** script. Now a file 'hf_d.manifest' and a folder 'hf_qc' are newly created.
@@ -528,7 +528,7 @@ Files in the folder after running the ***mima_prepare_manifest_and_qc.pl*** scri
 Prior to importing data into QIIME, the data will be assessed with Fastp. This step functions to assess overall sequence quality. Output information will be in a html format and will include: Run [Fastp](https://github.com/OpenGene/fastp) to assess the overall quality of the sequences. 
 
 ```shell
-[z3524677@katana2 demo]$ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c 'fastp -i all_r1.fq -I all_r2.fq -o hf_qc/ALL_R1.fq -O hf_qc/ALL_R2.fq -h hf_qc/fastp.outreport.html'
+[z3524677@katana2 demo]$ singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c 'fastp -i all_r1.fq -I all_r2.fq -o hf_qc/ALL_R1.fq -O hf_qc/ALL_R2.fq -h hf_qc/fastp.outreport.html'
 bash: warning: setlocale: LC_ALL: cannot change locale (en_AU.utf8)
 Read1 before filtering:
 total reads: 40000
@@ -605,12 +605,12 @@ Table: Phred Quality table
 ## Import fasta sequences into demux.qza 
 
 ```shell
-[z3524677@katana2 demo]$ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+[z3524677@katana2 demo]$ singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools import \
-	--type 'SampleData[PairedEndSequencesWithQuality]' \
-	--input-path hf_d.manifest \
-	--output-path demux.qza \
-	--input-format PairedEndFastqManifestPhred33'
+ --type 'SampleData[PairedEndSequencesWithQuality]' \
+ --input-path hf_d.manifest \
+ --output-path demux.qza \
+ --input-format PairedEndFastqManifestPhred33'
 
 Imported /srv/scratch/z3524677/hfdiet/demo/hf_d.manifest as PairedEndFastqManifestPhred33 to demux.qza
 ```
@@ -624,7 +624,7 @@ Pay attention to the PATH of the input and output files in the command, make sur
 Run dada2 to trim end low quality bases, remove chimera sequencing and merge pair-end sequences, generate feature tables and statistics output of the results 
 
 ```shell
-  [z3524677@katana2 demo]$ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+  [z3524677@katana2 demo]$ singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
   qiime dada2 denoise-paired \
     --i-demultiplexed-seqs demux.qza \
     --p-trunc-len-f 295 \
@@ -649,10 +649,10 @@ Three files: 'table.qza', 'rep-seqs.qza' and 'stats-dada2.qza' are newly generat
 Decompress **stats-dada2.qza** and check the quality details: 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
---input-path  stats-dada2.qza \
---output-path stats-dada2' 
+ --input-path  stats-dada2.qza \
+ --output-path stats-dada2' 
 ```
 
 **Dada2 stats**
@@ -694,10 +694,10 @@ Contents of two important files **rep-seqs.qza** and **table.qza**
 **rep-seqs.qza**
 
 ```bash
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
---input-path  rep-seqs.qza \
---output-path rep-seqs'
+ --input-path  rep-seqs.qza \
+ --output-path rep-seqs'
 
 #Exported rep-seqs.qza as DNASequencesDirectoryFormat to directory rep-seqs
 ```
@@ -717,14 +717,14 @@ TGAGGAATATTGGTCAATGGTCGGGAGACTGAACCAGCCAAGCCGCGTGAGGGAAGAAGGTACAGCGTATCGTAAACCTC
 **table.qza**
 
 ```bash
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
---input-path  table.qza \
---output-path table'
+ --input-path  table.qza \
+ --output-path table'
 #Exported table.qza as BIOMV210DirFmt to directory table
 
 #convert biom file to tsv file 
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 biom convert -i table/feature-table.biom -o table/feature-table.txt --to-tsv'
 ```
 
@@ -760,7 +760,7 @@ Although the sequencing target is  the 16S hyper variable region PCR products, t
 Check the help information for **mima_decontaminate_host.pl**
 
 ```shell
-[z3524677@katana2 demo]$ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && perl  /home/applications/mima/mima_decontaminate_host.pl '
+[z3524677@katana2 demo]$ singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && perl  /home/applications/mima/mima_decontaminate_host.pl '
 perl /home/applications/mima/mima_decontaminate_host.pl <rep_seqs.qza> <table.qza> <outputdir> <host_genome.fa_bowtie2_index> <threads>
 
 	<rep_seqs.qza> qiime format represntative sequences output from dada2
@@ -775,7 +775,7 @@ perl /home/applications/mima/mima_decontaminate_host.pl <rep_seqs.qza> <table.qz
 Run the decontamination script to generate the bash file and run the analysis with singularity
 
 ```shell
-[z3524677@katana2 demo]$ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && perl  /home/applications/mima/mima_decontaminate_host.pl rep-seqs.qza table.qza hf_host_decontamination /srv/scratch/mrcbio/workshop/db/mouse.genome 1'
+[z3524677@katana2 demo]$ singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && perl  /home/applications/mima/mima_decontaminate_host.pl rep-seqs.qza table.qza hf_host_decontamination /data/bio/workshop/db/mouse.genome 1'
 
 [z3524677@katana2 demo]$ ls hf_host_decontamination/
 decontaminationhost.sh
@@ -788,7 +788,7 @@ A folder 'hf_host_decontamination/' is newly creatd, with one file 'decontaminat
 **Execute the shell commands**
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && sh hf_host_decontamination/decontaminationhost.sh'
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && sh hf_host_decontamination/decontaminationhost.sh'
 ```
 
 Aftering running the decontamination pipeline, we get an updated **rep-seqs.qza** and **table.qza**
@@ -831,13 +831,13 @@ cp table.qza hf_diver/
 Execute taxonomy annotation and diversity analysis pipeline command 
 
 ```bash
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 perl /home/applications/mima/mima_diversity-basic-statistic.pl \
-		-m meta_data.txt \
-		-c /srv/scratch/mrcbio/workshop/db/gg-v3v4-classifier.qza \
-		-n 1 \
-		-d 800 \
-		-o hf_diver'
+ -m meta_data.txt \
+ -c /srv/scratch/mrcbio/workshop/db/gg-v3v4-classifier.qza \
+ -n 1 \
+ -d 800 \
+ -o hf_diver'
 ```
 
 The **mama_diversity-basic-statistic.pl** pipeline will generate a shell file *beta-diversity-commands.sh*, which includes all the taxonomical, alpha, beta diversity analysis . A file *beta-diversity-commands.sh* and a folder **hf_diver** are newly generated. 
@@ -848,7 +848,7 @@ The **mama_diversity-basic-statistic.pl** pipeline will generate a shell file *b
 
 ```shell
 #Run the analysis in batch model, the /scratch should be bind for this function, the database directory should be bind as well to get access to classifier database 
-singularity exec -B /srv/scratch/mrcbio/workshop/db/,/scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && sh beta-diversity-commands.sh '
+singularity exec -B /data/bio/workshop/db/,/scratch /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && sh beta-diversity-commands.sh '
 ```
 
 ## Taxonomy assignment of feature sequences 
@@ -865,11 +865,11 @@ singularity exec -B /srv/scratch/mrcbio/workshop/db/,/scratch /srv/scratch/mrcbi
 
 ```shell
 #taxonomy assignment of feature representative sequences
-singularity exec -B /srv/scratch/mrcbio/workshop/db/ /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec -B /data/bio/workshop/db/ /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime feature-classifier classify-sklearn \
-		--i-classifier /srv/scratch/mrcbio/workshop/db/gg-v3v4-classifier.qza \
-		--i-reads hf_diver/rep-seqs.qza \
-		--o-classification hf_diver/taxonomy.qza' 
+ --i-classifier /data/bio/workshop/db/gg-v3v4-classifier.qza \
+ --i-reads hf_diver/rep-seqs.qza \
+ --o-classification hf_diver/taxonomy.qza' 
 ```
 
 **Check the contents of the taxonomy.qza by decompress it and view it**
@@ -877,10 +877,10 @@ qiime feature-classifier classify-sklearn \
 Decompress *hf_diver/taxonomy.qza*
 
 ```bash
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
-	--input-path hf_diver/taxonomy.qza \
-	--output-path hf_diver/taxonomy'
+ --input-path hf_diver/taxonomy.qza \
+ --output-path hf_diver/taxonomy'
 	
 #output meassage 
 #Exported hf_diver/taxonomy.qza as TSVTaxonomyDirectoryFormat to directory hf_diver/taxonomy
@@ -903,31 +903,31 @@ d272bf25781448dde9031a24679a9012	k__Bacteria; p__Bacteroidetes; c__Bacteroidia; 
 **Note:** The decision of how deep should be selected is based on **stats-dada2/stats.tsv** clean reads in all samples, you should keep as much samples as possible, and should keep a good enough depth, usually for stool samples over 10000 sequences should be fine.  Here, as this is a demo, the raw sequences are 2500 and the final clean reads are all over 800, we chose 800 reads as the cut off. 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime feature-table rarefy \
-	--i-table hf_diver/table.qza \
-	--p-sampling-depth 800 \
-	--o-rarefied-table hf_diver/rarefy.table.qza'
+ --i-table hf_diver/table.qza \
+ --p-sampling-depth 800 \
+ --o-rarefied-table hf_diver/rarefy.table.qza'
 ```
 
 **Generate stack barchart**
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime taxa barplot \
-	--i-table hf_diver/rarefy.table.qza \
-	--i-taxonomy hf_diver/taxonomy.qza \
-	--m-metadata-file meta_data.txt \
-	--o-visualization hf_diver/normalized.taxa-bar-plots.qzv'
+ --i-table hf_diver/rarefy.table.qza \
+ --i-taxonomy hf_diver/taxonomy.qza \
+ --m-metadata-file meta_data.txt \
+ --o-visualization hf_diver/normalized.taxa-bar-plots.qzv'
 ```
 
 **Decompress qzv file and download to local to browse the file**
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
-	--input-path hf_diver/normalized.taxa-bar-plots.qzv \
-	--output-path hf_diver/normalized.taxa-bar-plots'
+ --input-path hf_diver/normalized.taxa-bar-plots.qzv \
+ --output-path hf_diver/normalized.taxa-bar-plots'
 ```
 
 Three files 'taxonomy.qza', 'rarefy.table.qza', 'normalized.taxa-bar-plots.qzv' and one filder 'normalized.taxa-bar-plots' are generated sequentially.
@@ -954,22 +954,22 @@ In order to generate the UniFrac distance, a phylogenetic tree should be build f
 
 ```shell
 #constructing phylogenetic tree
-singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec -B /scratch /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime alignment mafft \
  --i-sequences hf_diver/rep-seqs.qza \
  --o-alignment hf_diver/aligned-rep-seqs.qza'
 		
-singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec -B /scratch /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime alignment mask \
  --i-alignment hf_diver/aligned-rep-seqs.qza \
  --o-masked-alignment hf_diver/masked-aligned-rep-seqs.qza'
 		
-singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec -B /scratch /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime phylogeny fasttree \
  --i-alignment hf_diver/masked-aligned-rep-seqs.qza \
  --o-tree hf_diver/unrooted-tree.qza --p-n-threads 1'
 
-singularity exec -B /scratch /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec -B /scratch /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime phylogeny midpoint-root \
  --i-tree  hf_diver/unrooted-tree.qza \
  --o-rooted-tree hf_diver/rooted-tree.qza'
@@ -994,7 +994,7 @@ Four files 'aligned-rep-seqs.qza', 'masked-aligned-rep-seqs.qza', 'unrooted-tree
 Sometimes we need to filter samples by the meta data to select part of the samples for analysis
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime feature-table filter-samples \
  --i-table hf_diver/table.qza \
  --m-metadata-file meta_data.txt \
@@ -1004,7 +1004,7 @@ qiime feature-table filter-samples \
 **core diversity with phylogenetic information**
 
 ```bash
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity core-metrics-phylogenetic \
  --i-phylogeny  hf_diver/rooted-tree.qza \
  --i-table hf_diver/core.table.qza \
@@ -1022,7 +1022,7 @@ One files 'core.table.qza' and one filder 'core-metrics-results', which has the 
 **Check alpha diversity contents, shannon vector for example**
 
 ```bash
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
  --input-path hf_diver/core-metrics-results/shannon_vector.qza \
  --output-path hf_diver/core-metrics-results/shannon_vector'
@@ -1063,7 +1063,7 @@ If you download file 'weighted_unifrac_emperor.qzv' locally then upload to qiime
 - Generating rarefaction curve with qiime diversity plugin
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-rarefaction \
  --i-table hf_diver/table.qza \
  --i-phylogeny hf_diver/rooted-tree.qza \
@@ -1097,7 +1097,7 @@ If you download file 'alpha-rarefaction.qzv' locally then upload to qiime2 view,
 Faith_ph
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
  --i-alpha-diversity hf_diver/core-metrics-results/faith_pd_vector.qza \
  --m-metadata-file meta_data.txt \
@@ -1115,7 +1115,7 @@ If you download file 'faith-pd-group-significance.qzv' locally then upload to qi
 evenness
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
  --i-alpha-diversity hf_diver/core-metrics-results/evenness_vector.qza \
  --m-metadata-file meta_data.txt \
@@ -1133,7 +1133,7 @@ If you download file 'evenness-group-significance.qzv' locally then upload to qi
 observed features 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
  --i-alpha-diversity hf_diver/core-metrics-results/observed_features_vector.qza \
  --m-metadata-file meta_data.txt \
@@ -1151,7 +1151,7 @@ If you download file 'observed_features_vector.qzv' locally then upload to qiime
 shannon index 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity alpha-group-significance \
  --i-alpha-diversity hf_diver/core-metrics-results/shannon_vector.qza \
  --m-metadata-file meta_data.txt \
@@ -1169,7 +1169,7 @@ If you download file 'shannon_vector.qzv' locally then upload to qiime2 view, th
 Output alpha diversity values from qiime2 output
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
  --input-path hf_diver/alpha-group/shannon_vector.qzv \
  --output-path hf_diver/alpha-group/shannon_vector'
@@ -1184,7 +1184,7 @@ A folder 'shannon_vector' is newly generated. You can download the whole directo
 Bray curtis distance on diet
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
  --i-distance-matrix hf_diver/core-metrics-results/bray_curtis_distance_matrix.qza \
  --m-metadata-file meta_data.txt \
@@ -1203,7 +1203,7 @@ If you download file 'Diet.bray_curtis.qzv' locally then upload to qiime2 view, 
 Jaccard distance 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
  --i-distance-matrix hf_diver/core-metrics-results/jaccard_distance_matrix.qza \
  --m-metadata-file meta_data.txt \
@@ -1222,7 +1222,7 @@ If you download file 'Diet.jaccard.qzv' locally then upload to qiime2 view, the 
 Unweighted UniFrac distacne
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
  --i-distance-matrix hf_diver/core-metrics-results/unweighted_unifrac_distance_matrix.qza \
  --m-metadata-file meta_data.txt \
@@ -1241,7 +1241,7 @@ If you download file 'Diet.unweighted_unifrac.qzv' locally then upload to qiime2
 Weighted UniFrac distacne 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime diversity beta-group-significance \
  --i-distance-matrix hf_diver/core-metrics-results/weighted_unifrac_distance_matrix.qza \
  --m-metadata-file meta_data.txt \
@@ -1260,10 +1260,10 @@ If you download file 'Diet.weighted_unifrac.qzv' locally then upload to qiime2 v
 Decompress visulization qzv file and download to local computer to check the results 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 qiime tools export \
-	--input-path hf_diver/beta-group/Diet.weighted_unifrac.qzv \
-	--output-path hf_diver/beta-group/Diet.weighted_unifrac' 
+ --input-path hf_diver/beta-group/Diet.weighted_unifrac.qzv \
+ --output-path hf_diver/beta-group/Diet.weighted_unifrac' 
 ```
 
 A folder 'Diet.weighted_unifrac' is newly generated. You can download the whole directory to your local pc or laptap and open the file 'index.html' to visualize.
@@ -1285,7 +1285,7 @@ A folder 'Diet.weighted_unifrac' is newly generated. You can download the whole 
 Check the help information for the pipeline 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8  && perl /home/applications/mima/mima_lefsetable_16s.pl rarefy.table.qza taxonomy.qza Diet meta_data.txt hf_lefse_tables '
+singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8  && perl /home/applications/mima/mima_lefsetable_16s.pl rarefy.table.qza taxonomy.qza Diet meta_data.txt hf_lefse_tables '
 ```
 
 LEfSe outputs are in directory 'hf_lefse_tables', this step will generate input file of differnt ranks and merge all 7 ranks taxa into one file to be used in the following step to draw clade plot and bar plot of LDA scores.  
@@ -1293,7 +1293,7 @@ LEfSe outputs are in directory 'hf_lefse_tables', this step will generate input 
 For a regular tab seperated table to do LEfSe analysis, the following pipeline can be used 
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activate lefse-conda && perl /home/applications/mima/mima_lefse_pipeline.pl '
+singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate lefse-conda && perl /home/applications/mima/mima_lefse_pipeline.pl '
 
 	-i table.tsv, the rarefied feature table used to do LEfSe
 	-m meta datafile, a table with rows as sample and column as differnt meta data
@@ -1310,7 +1310,7 @@ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activ
 Here in this example, we would like to identify the differential abundant taxa that enriched in high fat diet mouse.  
 
 ```shell
-singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activate lefse-conda && perl  /home/applications/mima/mima_lefse_pipeline.pl -i hf_lefse_tables/lefse_allrank/merge_taxonomy.csv -m meta_data.txt -g Diet:Normal,HFD -o hf_lefsenew -f dietlefse -d 3'
+singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate lefse-conda && perl  /home/applications/mima/mima_lefse_pipeline.pl -i hf_lefse_tables/lefse_allrank/merge_taxonomy.csv -m meta_data.txt -g Diet:Normal,HFD -o hf_lefsenew -f dietlefse -d 3'
 ```
 
 ## cladoplot presenting of signatures
@@ -1327,3 +1327,8 @@ singularity exec /srv/scratch/mrcbio/workshop/mrcmicrobiome.sif bash -c '. activ
 
 
 Congratulations! 
+
+
+The copyright of qiime2 and LEfSe belongs to the developing team.  
+
+
