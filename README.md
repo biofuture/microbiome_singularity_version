@@ -199,7 +199,7 @@ Next let's upload this file to your scratch drive on Katana using **Katana data 
 * Password = zID password
 * Port = 22
 
-<img src="./images/FileZ.png" style="zoom:90%;" />
+<img src="./images/FileZilla_restech.PNG" style="zoom:90%;" />
 
 ### Enter remote site filepath
 
