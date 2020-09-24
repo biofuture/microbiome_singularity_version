@@ -328,7 +328,7 @@ Using the FTP software to upload the demo data set and the relevant meta data fi
 login to compute nodes to run jobs.  
 
 ```bash
-qsub -I -l nodes=1:ppn=1,mem=10gb,walltime=10:00:00
+qsub -I -q R717942 -l nodes=1:ppn=1,mem=10gb,walltime=6:00:00
 ```
 
 mrcmicrobiome singularity sif have conda, qiime2-2020.8 and lefse installed, all the relevant dependence are resolved. Copy the demo data set to your own work directory 
@@ -336,6 +336,7 @@ mrcmicrobiome singularity sif have conda, qiime2-2020.8 and lefse installed, all
 Check the singularity image file /data/bio/workshop/mrcmicrobiome.sif 
 
 Using the following command to create the wrok directory and copy the demo data set to your directory
+**Remember to replace the yourzID with your zID**
 
 ```shell
 #create the hfdiet working directory 
@@ -350,7 +351,7 @@ cp -r /data/bio/workshop/demo/  /srv/scratch/yourzID/hfdiet
 
 ## Check the demo and database db directory
 
-There are in total 16 samples in the demo, check the **meta_data.txt** file, you can find the samples information 
+There are in total 16 samples in the demo, this demo compare mice stool microbiome with normal and high fat diet chow  check the **meta_data.txt** file, you can find the samples information 
 
 ```bash
 [z3524677@katana2 hfdiet]$ tree demo/
@@ -443,9 +444,6 @@ tree /data/bio/workshop/db/
 ## QIIME2 manifest file preparation, example below 
 
 ```bash
-[z3524677@katana2 demo]$ cat hf_d.manifest
-
-#output 
 sample-id,absolute-filepath,direction
 5821_S50_L001,/srv/scratch/z3524677/hfdiet/demo/rawfq//5821_S50_L001_R1.fastq.gz,forward
 5821_S50_L001,/srv/scratch/z3524677/hfdiet/demo/rawfq//5821_S50_L001_R2.fastq.gz,reverse
@@ -487,10 +485,11 @@ perl /home/applications/mima/mima_prepare_manifest_and_qc.pl <Absolute path to s
 
 Run the one comman pipeline to generate all the necessary scripts. This one command will generate all the necessary scripts for the QC analysis. You can submit this as a job or run each command individually in an interactive job. As QC can take time, it's advisable to submit all the commands as a job `qsub qc.pbs`. For learning purposes today we will go through each command and it's output in an interactive model as the demo small
 
+**Remember to change the zID to your own zID** 
 ```bash
 #run the command to generate commands for quality control 
 #Absolute path should be used input and output directory 
-[z3524677@katana2 demo]$ singularity exec --cleanenv /data/bio/workshop/mrcmicrobiome.sif bash -c 'perl  /home/applications/mima/mima_prepare_manifest_and_qc.pl /srv/scratch/z3527776/hfdiet/demo/rawfq/ /srv/scratch/z3527776/hfdiet/demo/hf_d.manifest all_r1.fq all_r2.fq /srv/scratch/z3527776/hfdiet/demo/hf_qc 1 /data/bio/workshop/mrcmicrobiome.sif'
+[z3524677@katana2 demo]$ singularity exec --cleanenv /data/bio/workshop/mrcmicrobiome.sif bash -c 'perl  /home/applications/mima/mima_prepare_manifest_and_qc.pl /srv/scratch/z3524677/hfdiet/demo/rawfq/ /srv/scratch/z3524677/hfdiet/demo/hf_d.manifest all_r1.fq all_r2.fq /srv/scratch/z3524677/hfdiet/demo/hf_qc 1 /data/bio/workshop/mrcmicrobiome.sif'
 ```
 
 ```bash
@@ -602,6 +601,16 @@ Table: Phred Quality table
 
 <img src="/images/image-20200914123316926.png" alt="image-20200914123316926" style="zoom:90%;" />
 
+
+**Determine the trim location at read1 and read2**
+For Miseq reads, usually the quality of bases decrease dramatically while towarding to the end of the reads, in order to loss less sequences during merge of pair end reads, it is better operation to trim the end of reads.
+
+Read1, to keep higher quality bases, the trim location is set to 295 
+<img src="/images/read1.png" alt="image-read1" style="zoom:90%;" />
+
+Read2, to keep higher quality bases, the trim locaiton is set to 220  
+<img src="/images/read2.png" alt="image-read2" style="zoom:90%;" />
+
 ## Import fasta sequences into demux.qza 
 
 ```shell
@@ -688,6 +697,9 @@ sample-id	input	filtered	percentage of input passed filter	denoised	merged	perce
 6328_S93_L001	2500	1531	61.24	1420	1256	50.24	1146	45.84
 6329_S37_L001	2500	1327	53.08	1217	1012	40.48	1000	40
 ```
+
+**Determine the depth to normalize for alpha and beta diversity comparison
+By analyzing the depth of clean sequences of  all the samples, 800 is decided as the cut off for normalization to keep all samples.   
 
 Contents of two important files **rep-seqs.qza** and **table.qza**
 
@@ -834,7 +846,7 @@ Execute taxonomy annotation and diversity analysis pipeline command
 singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
 perl /home/applications/mima/mima_diversity-basic-statistic.pl \
  -m meta_data.txt \
- -c /srv/scratch/mrcbio/workshop/db/gg-v3v4-classifier.qza \
+ -c /data/bio/workshop/db/gg-v3v4-classifier.qza \
  -n 1 \
  -d 800 \
  -o hf_diver'
@@ -1042,13 +1054,25 @@ head -4 hf_diver/core-metrics-results/shannon_vector/alpha-diversity.tsv
 
 **Check PcoA plot for bray-curtis distance and weighted unifrac distance**
 
-If you download file 'bray_curtis_emperor.qzv' locally then upload to qiime2 view, the visualization should be look like this. (Red is high fat diet samples and blue are healthy)
+Decompress the qzv file and visulize at local computer or donwload qzv file and upload to qiime2 view for visulization 
+
+```bash
+singularity exec /data/bio/workshop/mrcmicrobiome.sif  bash -c '. activate qiime2-2020.8 && \
+qiime tools export \
+ --input-path hf_diver/core-metrics-results/weighted_unifrac_emperor.qzv \
+ --output-path hf_diver/core-metrics-results/weighted_unifrac_emperor'
+
+```
+
+If you download file 'bray_curtis_emperor.qzv' locally then upload to ![qiime2 view](https://view.qiime2.org/), the visualization should be look like this. (Red is high fat diet samples and blue are healthy)
 
 <img src=".\images\emperor.png" alt="emperor" style="zoom:60%;" />
 
 If you download file 'weighted_unifrac_emperor.qzv' locally then upload to qiime2 view, the visualization should be look like this.
 
 ![emperor (3)](./images/emperor.3.png)
+
+**Now check all the other alpha diversity index and beta diveristy PcoA results 5 minutes given**
 
 ## Alpha diversity rarefaction curve
 
@@ -1282,16 +1306,15 @@ A folder 'Diet.weighted_unifrac' is newly generated. You can download the whole 
 - Understand how LEfSe identify microbial signatures
 - Identify differential abundant taxa in the high fat diet mouse 
 
-Check the help information for the pipeline 
 
 ```shell
-singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8  && perl /home/applications/mima/mima_lefsetable_16s.pl rarefy.table.qza taxonomy.qza Diet meta_data.txt hf_lefse_tables '
+singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate qiime2-2020.8  && perl /home/applications/mima/mima_lefsetable_16s.pl hf_diver/rarefy.table.qza hf_diver/taxonomy.qza Diet meta_data.txt hf_lefse_tables '
 ```
 
 LEfSe outputs are in directory 'hf_lefse_tables', this step will generate input file of differnt ranks and merge all 7 ranks taxa into one file to be used in the following step to draw clade plot and bar plot of LDA scores.  
 
 For a regular tab seperated table to do LEfSe analysis, the following pipeline can be used 
-
+Check the help information for the pipeline 
 ```shell
 singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate lefse-conda && perl /home/applications/mima/mima_lefse_pipeline.pl '
 
