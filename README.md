@@ -128,7 +128,7 @@ Download a terminal in order to log on to a remote terminal e.g. [Iterm](https:/
 
 
 ```{bash,eval=F, echo=T}
-ssh zID@katana.unsw.edu.au
+ssh zID@katana.restech.unsw.edu.au
 ```
 
 <img src="./images/katana_logon.png" style="zoom:90%;" />
