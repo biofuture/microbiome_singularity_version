@@ -16,13 +16,14 @@ Due to complex dependency and version conflicts, bioinformaticians are strugglyi
    * [Schedule](#schedule)
    * [1. Linux and HPC setup](#1-linux-and-hpc-setup)
             * [Overview](#overview)
-      * [High Performance Cluster Basics](#high-performance-cluster-basics)
       * [Katana | UNSW Research](#katana--unsw-research)
       * [Log on to Katana](#log-on-to-katana)
       * [Working on Katana](#working-on-katana)
-      * [Katana data Mover](#katana-data-mover)
-      * [Training](#training)
-      * [Basic Linux commands](#basic-linux-commands)
+      * [Navigating Katana](#navigating-katana)
+      * [Data upload ](#data-upload)
+      * [Futher Navigation of Katana](#futher-navigation-of-katana)
+      * [Futher Training](#further-training)
+      * [Reference Linux commands](#reference-linux-commands)
       * [Text editing from the command line](#text-editing-from-the-command-line)
    * [2. Quality control](#2-quality-control)
       * [Understand the demo data set](#understand-the-demo-data-set)
@@ -105,7 +106,6 @@ The actual schedule may vary slightly depending on the topics and exercises chos
 # 1. Linux and HPC setup 
 
 
-
 > #### Overview
 >
 > **Teaching:** 30 min
@@ -116,43 +116,13 @@ The actual schedule may vary slightly depending on the topics and exercises chos
 - Learn basic linux commands and HPC 
 - Learn how to transfer data from HPC to local computers
 
-## High Performance Cluster Basics
-
-You can find a nice introduction to HPC [here](https://hpc-carpentry.github.io/hpc-intro/). Below are some basic introductions.
-
-**What is a High Performance Cluster (HPC)**
-
-A High Performance Cluster refers to a cluster of computers used to tackle large scale analytical problems. Essentially it's a large collection of computing resources which can be utilised for scientific research.
-
-**Compute Nodes**
-
-Compute nodes can be thought of as powerful computers/servers, which carry out the majority of the work on a HPC.  Each computer node has it's own, Operating System (OS), Central Processing Unit (CPU), Memory (RAM) and Hard Drive (HD).
-
-**Head Node**
-
-The Head node is essentially the brains behind the HPC.  It is responsible for tracking and allocating computing resources to users.
-
-**Login Node**
-
-This is the node which controls user access and logon
-
-**Scheduling System**
-
-At the heart of the HPC is the software which manages the workload. Essentially it's a program that attempts to balance utilisation across the resource available.
-
-**Queue** 
-
-All jobs run on queues.  Queues have differing attributes which match the jobs which run on them.  These attributes can relate to things like: job run time length, number of slots, amount of memory.
-
-**Job**
-
-A job is essentially your task, the code which you ask the HPC to execute.
-
 ## Katana | UNSW Research 
 
 Katana is a shared computational cluster located on campus at UNSW that has been designed to provide easy access to computational resources for groups working with non-sensitive data. Katana will be used for your next generation sequencing analysis.
 
 ## Log on to Katana
+
+### Log on from Iterm (Mac)
 
 Download a terminal in order to log on to a remote terminal e.g. [Iterm](https://www.iterm2.com/) (Mac) or [mobaxterm](https://mobaxterm.mobatek.net/) (Windows)
 
@@ -161,9 +131,12 @@ Download a terminal in order to log on to a remote terminal e.g. [Iterm](https:/
 ssh zID@katana.unsw.edu.au
 ```
 
-<img src="./images/katana_logon.png" style="zoom:90%;" />Log on from Mobaxterm (Windows Computer)
+<img src="./images/katana_logon.png" style="zoom:90%;" />
+
+### Log on from Mobaxterm (Windows)
 
 <img src="./images/mobaxterm_windows.png" style="zoom:90%;" />
+
 
 ## Working on Katana
 Always create an [interactive job](https://research.unsw.edu.au/katana-compute-jobs) to work on Katana - Do not run jobs on head node
@@ -172,24 +145,54 @@ qsub -I -l nodes=1:ppn=1,mem=10gb,walltime=10:00:00
 ```
 <img src="./images/interactive_session.png" style="zoom:90%;" />
 
-Always work in your scratch drive, this directory has a lot more space than your home
-```{bash,eval=F, echo=T}
+
+## Navigating Katana
+
+Check your filepath
+```{bash, eval=FALSE}
+pwd
+```
+
+Move into your personal scratch directory. Always create an [interactive job](https://research.unsw.edu.au/katana-compute-jobs) to work on Katana - Do not run jobs on head node
+```{bash, eval=FALSE}
 cd /srv/scratch/zID
 ```
-A lot of programs are pre-installed on Katana, to view:
 
-```{bash,eval=F, echo=T}
-module avail
+List what is in your filepath
+```{bash, eval=FALSE}
+ls
 ```
 
-To load a program
-
-```{bash,eval=F, echo=T}
-module load program
+Make a new directory called `bio_tutorial`
+```{bash, eval=FALSE}
+mkdir bio_tutorial
 ```
-## Katana data Mover
 
-Use [Katana data mover (kdm)](https://research.unsw.edu.au/katana-storage) to move data. Data can be moved from desktop to remote server using a SFTP client [FileZilla](https://filezilla-project.org/). Use this to upload data (e.g. study metadata) and download your results.
+Move into the `bio_tutorial` directory  
+```{bash, eval=FALSE}
+cd bio_tutorial
+```
+
+Move back a directory 
+```{bash, eval=FALSE}
+cd ..
+```
+
+## Data upload 
+
+On your desktop and open notepad and create a file with the following text and save to your desktop as `test_file.txt`
+
+```{bash, eval=FALSE}
+-8ACCGGB@=8=6BCFFCDEFGFGGGGGGGGGGGGGGFFGF@C@CFGGGFCCBFGGGFGCFGGGFGDCFGGFGGGGGFFCGFFGDFCGGCGGCC<EBFFGFBBE<EFFGEEFGG?<F9?E7++8+,,:<?<,=++@:FEGGD9F@7F7>=F;8FFG@7FFCFCFFCCBCF8>DFCFEBFGGFGGDC:F:*<F7<F,4<B9C*CCCACEFFEGC:EE:CE**A89CFCFCC=C5**<+55;C*CCE=EC>C58?F7:@7<:<>+37:C7C99@E77C:<C*;++8:735B))8@36>>BC?)
+@M01153:567:000000000-CNVPV:1:1101:23398:1773 1:N:0:GCTCATGA+GCGTAAGA
+CCTACGGGGGGCAGCAGTAGGGAATCTTCGGCAATGGACGAAAGTCTGACCGAGCAACGCCGCGTGAGTGAAGAAGGTTTTCGGATCGTAAAACTCTGTTGTTAGAGAAGAACAAGGACGTTAGTAACTGAACGTCCCCTGACGGTATCTAACCAGACAGCCACGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGTGGCCAGCGTTGTCCGGTTTTATTGGGCGTAAAGCGAGCGCAGGCGGTTTCTTAAGTCTGATGTGAAAGCCCCCGGCTCAACCGGGGAGGGTCATTGGTT
+```
+
+Next let's upload this file to your scratch drive on Katana using **Katana data Mover**
+
+### Open FileZilla
+
+1. Enter the following details in the top tool bar
 
 * Hostname = `ssh zID@kdm.unsw.edu.au`
 * Username = zID
@@ -198,25 +201,69 @@ Use [Katana data mover (kdm)](https://research.unsw.edu.au/katana-storage) to mo
 
 <img src="./images/FileZ.png" style="zoom:90%;" />
 
-You can also log on to the kdm on your ssh client in the same way you log on to katana. 
+### Enter remote site filepath
 
-Use this if you are downloading data or databases to Katana
+2. Once your logged on add `/srv/scratch/zID` to the bar saying `remote site`
 
-<img src="./images/kdm_login.png" style="zoom:90%;" />
+### Uploading file
 
-```{bash,eval=F, echo=T}
-ssh zID@kdm.unsw.edu.au
+Copy `test_file.txt` into your `/srv/scratch/zID`
+
+## Futher Navigation of Katana
+
+```{bash, eval=FALSE}
+cp test_file.txt bio_tutorial/
 ```
 
+Move into `bio_tutorial` directory 
+```{bash, eval=FALSE}
+cd bio_tutorial/
+```
 
-## Training 
+Now lets list whats in the `bio_tutorial` directory 
+```{bash, eval=FALSE}
+ls 
+```
+
+Duplicate the file 
+```{bash, eval=FALSE}
+cp test_file.txt test_file2.txt
+```
+
+List all files with the suffix `.txt`
+```{bash, eval=FALSE}
+ls *.txt
+```
+
+Remove test_file2.txt
+```{bash, eval=FALSE}
+rm test_file2.txt
+```
+
+Look inside test_file.txt
+```{bash, eval=FALSE}
+less test_file.txt
+```
+
+Move back into scratch directory
+```{bash, eval=FALSE}
+cd ..
+```
+
+Delete `bio_tutorial`
+```{bash, eval=FALSE}
+rm -r bio_tutorial/
+```
+
+## Further Training 
 
 UNSW research technology offer a range of training courses, that as of 2020 have been moved online. These are a great introduction to general programming and will help you improve the efficiency of your work. Explore them [here](https://research.unsw.edu.au/research-technology-training) 
 
-
-## Basic Linux commands
-
 Introduce yourself to basic linux command using an [online course](http://www.ee.surrey.ac.uk/Teaching/Unix/)
+
+## Reference Linux commands
+
+Use this table as a reference during the workshop
 
 | Command | Meaning                                                      | Example                                                      |
 | ------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
