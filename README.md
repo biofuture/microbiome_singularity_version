@@ -1064,7 +1064,7 @@ qiime tools export \
 
 ```
 
-If you download file 'bray_curtis_emperor.qzv' locally then upload to ![qiime2 view](https://view.qiime2.org/), the visualization should be look like this. (Red is high fat diet samples and blue are healthy)
+If you download file 'bray_curtis_emperor.qzv' locally then upload to [qiime2view](https://view.qiime2.org/), the visualization should be look like this. (Red is high fat diet samples and blue are healthy)
 
 <img src=".\images\emperor.png" alt="emperor" style="zoom:60%;" />
 
@@ -1351,7 +1351,7 @@ singularity exec /data/bio/workshop/mrcmicrobiome.sif bash -c '. activate lefse-
 
 Congratulations! 
 
-
-The copyright of qiime2 and LEfSe belongs to the developing team.  
+-----------------------------------
+The copyright of qiime2 and LEfSe belongs to the developing team. The singularity version of pipeline is develped by MRC Bioinformatics team.   
 
 
