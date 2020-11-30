@@ -6,7 +6,7 @@ Prepared by MRC bioinformatics team **Dr Xiao-Tao Jiang**, **Dr Emily McGovern**
 
 Date: 2020-09-15
 
-Due to complex dependency and version conflicts, bioinformaticians are strugglying about installation of different tools and solving their dependence relationship and debuging while version conflicts happens. To solve this problem and establish a comprehensive, mobile and easy to use framwork for microbiome analysis to beginners, we build this MRC microbiome singularity image. This document describe the interface for different aspects of analysis using a demo example and the mrcmicrobiome.sif singularity image. 
+Due to complex dependency and version conflicts, bioinformaticians are struggling about installation of different tools and solving their dependence relationship and debugging while version conflicts happens. To solve this problem and establish a comprehensive, mobile and easy to use framwork for microbiome analysis to beginners, we build this MRC microbiome singularity image. This document describe the interface for different aspects of analysis using a demo example and the mrcmicrobiome.sif singularity image. 
 
 <!--ts-->
    * [MRC microbiome analysis toolbox-A singularity container version](#mrc-microbiome-analysis-toolbox-a-singularity-container-version)
