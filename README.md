@@ -328,7 +328,7 @@ Using the FTP software to upload the demo data set and the relevant meta data fi
 login to compute nodes to run jobs.  
 
 ```bash
-qsub -I -q R717942 -l nodes=1:ppn=1,mem=10gb,walltime=6:00:00
+qsub -I -q R1180647  -l nodes=1:ppn=1,mem=10gb,walltime=6:00:00
 ```
 
 mrcmicrobiome singularity sif have conda, qiime2-2020.8 and lefse installed, all the relevant dependence are resolved. Copy the demo data set to your own work directory 
